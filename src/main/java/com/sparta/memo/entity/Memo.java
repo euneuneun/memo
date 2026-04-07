@@ -11,10 +11,15 @@ import lombok.Setter;
 public class Memo {
     private Long id;
     private String username;
-    private String content;
+    private String contents;
 
     public Memo(MemoRequestDto requestDto) {
         this.username = requestDto.getUsername();
-        this.content = requestDto.getContents();
+        this.contents = requestDto.getContents();
+    }
+
+    public void update(MemoRequestDto requestDto) {
+        this.username = requestDto.getUsername();
+        this.contents = requestDto.getContents();
     }
 }
