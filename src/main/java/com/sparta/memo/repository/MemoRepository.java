@@ -24,13 +24,10 @@ public class MemoRepository {
 
     public Memo save(Memo memo) {
         // DB 저장
-        MemoRepository memoRepository = new MemoRepository(jdbcTemplate);
-        Memo saveMemo = memoRepository.save(memo);
-
         KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키를 반환받기 위한 객체
 
         String sql = "INSERT INTO memo (username, contents) VALUES (?, ?)";
-        jdbcTemplate.update( con -> {
+        jdbcTemplate.update(con -> {
                     PreparedStatement preparedStatement = con.prepareStatement(sql,
                             Statement.RETURN_GENERATED_KEYS);
 
@@ -45,22 +42,6 @@ public class MemoRepository {
         memo.setId(id);
 
         return memo;
-
-    }
-
-
-
-    public void update(Long id, MemoRequestDto requestDto){
-        // memo 내용 수정
-        String sql = "UPDATE memo SET username = ?, contents = ? WHERE id = ?";
-        jdbcTemplate.update(sql, requestDto.getUsername(), requestDto.getContents(), id);
-    }
-
-
-    public void delete(Long id) {
-        // memo 삭제
-        String sql = "DELETE FROM memo WHERE id = ?";
-        jdbcTemplate.update(sql, id);
     }
 
     public List<MemoResponseDto> findAll() {
@@ -79,12 +60,22 @@ public class MemoRepository {
         });
     }
 
+    public void update(Long id, MemoRequestDto requestDto) {
+        String sql = "UPDATE memo SET username = ?, contents = ? WHERE id = ?";
+        jdbcTemplate.update(sql, requestDto.getUsername(), requestDto.getContents(), id);
+    }
+
+    public void delete(Long id) {
+        String sql = "DELETE FROM memo WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
     public Memo findById(Long id) {
         // DB 조회
         String sql = "SELECT * FROM memo WHERE id = ?";
 
         return jdbcTemplate.query(sql, resultSet -> {
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 Memo memo = new Memo();
                 memo.setUsername(resultSet.getString("username"));
                 memo.setContents(resultSet.getString("contents"));
