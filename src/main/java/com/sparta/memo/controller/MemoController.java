@@ -29,6 +29,12 @@ public class MemoController {
         return memoService.getMemos();
     }
 
+    @GetMapping("/memos/contents")
+    public List<MemoResponseDto> getMemosByKeyword(@RequestParam String keyword) // 생략 가능하다고 하는데 개념 기억안나서 @RequestParam 그냥 사용함
+    {
+        return memoService.getMemosByKeyword(keyword);
+    }
+
     @PutMapping("/memos/{id}")
     public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
         return memoService.updateMemo(id, requestDto);
